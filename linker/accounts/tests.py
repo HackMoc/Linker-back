@@ -1,5 +1,6 @@
 from django.test import Client, TestCase
 from .models import User
+from django.contrib.auth.hashers import check_password, make_password
 from django.urls import reverse
 
 class ModelsTestCase(TestCase):
@@ -20,10 +21,14 @@ class ModelsTestCase(TestCase):
             username='jhon',
             email='jhon@gmail.com',
         )
-        username.save()
+        password = 'super strong pass'
+        user.password = make_password(password)
+        user.save()
+        self.assertTrue(check_password(password, user.password))
+
+
 class ViewTestCase(TestCase):
 
-        self.assertNotEqual(username.first_name, None)
     def test_login_view_status_code_200(self):
         c = Client()
         response = c.post(reverse('accounts:login'), {'username': 'chris', 'password': 'test'})
