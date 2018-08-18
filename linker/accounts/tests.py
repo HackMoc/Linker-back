@@ -41,3 +41,14 @@ class ViewTestCase(TestCase):
         c = Client()
         response = c.post(reverse('accounts:login'), {'username': 'chris', 'password': 'test'})
         self.assertEqual(response.status_code, 200)
+
+    def test_login_view_return_token(self):
+        user = User.objects.create(
+            email='jhon@gmail.com',
+            username='jhon',
+            password='strong',
+            token='879141ad-2b68-45a0-85c8-9a6d1cb25778'
+        )
+        c = Client()
+        response = c.post(reverse('accounts:login'), {'username': 'jhon', 'password': 'strong'})
+        self.assertEqual(response.content, b'879141ad-2b68-45a0-85c8-9a6d1cb25778')
