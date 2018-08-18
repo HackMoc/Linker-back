@@ -26,6 +26,14 @@ class ModelsTestCase(TestCase):
         user.save()
         self.assertTrue(check_password(password, user.password))
 
+    def test_assert_token_valid(self):
+        user = User.objects.create(
+            email='jhon@gmail.com',
+            username='jhon',
+            password='strong',
+            token='879141ad-2b68-45a0-85c8-9a6d1cb25778'
+        )
+        self.assertEqual(user.token, '879141ad-2b68-45a0-85c8-9a6d1cb25778')
 
 class ViewTestCase(TestCase):
 
