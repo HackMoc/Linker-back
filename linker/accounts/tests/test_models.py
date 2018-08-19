@@ -1,20 +1,14 @@
 from django.test import Client, TestCase
-from .models import User
+from ..models import User
 from django.contrib.auth.hashers import check_password, make_password
 from django.urls import reverse
+from django.db import IntegrityError
 
 class ModelsTestCase(TestCase):
 
     def test_model_instance(self):
         username = User()
         self.assertIsInstance(username, User)
-
-    def teste_field_not_blank(self):
-        user = User.objects.create(
-            email='jhon@gmail.com',
-        )
-        user.save()
-        self.assertNotEqual(user.username, None)
 
     def test_verifica_password_of_user(self):
         user = User.objects.create(
@@ -35,20 +29,13 @@ class ModelsTestCase(TestCase):
         )
         self.assertEqual(user.token, '879141ad-2b68-45a0-85c8-9a6d1cb25778')
 
-class ViewTestCase(TestCase):
-
-    def test_login_view_status_code_200(self):
-        c = Client()
-        response = c.post(reverse('accounts:login'), {'username': 'chris', 'password': 'test'})
-        self.assertEqual(response.status_code, 200)
-
-    def test_login_view_return_token(self):
-        user = User.objects.create(
+    def test_create_duplicated_user(self):
+        User.objects.create(
             email='jhon@gmail.com',
             username='jhon',
-            password='strong',
-            token='879141ad-2b68-45a0-85c8-9a6d1cb25778'
         )
-        c = Client()
-        response = c.post(reverse('accounts:login'), {'username': 'jhon', 'password': 'strong'})
-        self.assertEqual(response.content, b'879141ad-2b68-45a0-85c8-9a6d1cb25778')
+        with self.assertRaises(IntegrityError):
+            User.objects.create(
+                email='jhon@gmail.com',
+                username='jhon',
+            )

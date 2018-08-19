@@ -1,17 +1,18 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import JsonResponse
 from django.views import View
-from accounts.models import User
+from accounts.services import user_auth
 
 class LoginView(View):
     def post(self, request):
-        try:
-            user = User.objects.get(
-                username=request.POST.get('username'),
-                password=request.POST.get('password'),
-            )
-            data = user.token
-        except:
-            data = 'User not found'
-        return HttpResponse(data, content_type="text/plain", status=200)
+        data = {}
+        user = user_auth(
+            username=request.POST.get('username'),
+            password=request.POST.get('password'),
+        )
+        if user:
+            data['token'] = user.token
+        else:
+            data['error'] = 'User not found'
+        return JsonResponse(data, status=200)
 
