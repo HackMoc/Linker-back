@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views import View
-from accounts.services import user_auth
+from accounts.services import user_auth, user_create
 
 class LoginView(View):
     def post(self, request):
@@ -16,3 +16,12 @@ class LoginView(View):
             data['error'] = 'User not found'
         return JsonResponse(data, status=200)
 
+
+class RegisterView(View):
+    def post(self, request):
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        user_create(username, email, password)
+        data = {}
+        return JsonResponse(data, status=200)

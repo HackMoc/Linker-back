@@ -37,3 +37,20 @@ class ViewTestCase(TestCase):
         response = c.post(reverse('accounts:login'), {'username': 'jhon', 'password': 'strong'})
         data = json.loads(response.content)
         self.assertEqual(data['error'], 'User not found')
+
+    def test_register_view_status_code_200(self):
+        c = Client()
+        response = c.post(
+            reverse('accounts:register'),
+            {'username':'jhon', 'email':'jhon@gmail.com', 'password':'strong'}
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_register_create_user(self):
+        c = Client()
+        response = c.post(
+            reverse('accounts:register'),
+            {'username':'jhon', 'email':'jhon@gmail.com', 'password':'strong'}
+        )
+        user = User.objects.get(username='jhon')
+        self.assertIsNotNone(user)
