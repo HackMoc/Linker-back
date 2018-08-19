@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from accounts.services import user_auth, user_create
+
 from django.http import JsonResponse
 from django.views import View
-from accounts.services import user_auth, user_create
+
 
 class LoginView(View):
     def post(self, request):

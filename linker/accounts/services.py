@@ -3,6 +3,7 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.core.exceptions import ObjectDoesNotExist
 from uuid import uuid4
 
+
 def user_auth(username, password):
     try:
         user = User.objects.get(
@@ -13,6 +14,7 @@ def user_auth(username, password):
     except ObjectDoesNotExist:
         pass
     return None
+
 
 def user_create(username, email, password):
     token = uuid4()

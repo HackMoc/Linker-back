@@ -1,8 +1,9 @@
-from django.test import Client, TestCase
-from ..models import User
 from django.contrib.auth.hashers import check_password, make_password
-from django.urls import reverse
 from django.db import IntegrityError
+from django.test import TestCase
+
+from ..models import User
+
 
 class ModelsTestCase(TestCase):
 
